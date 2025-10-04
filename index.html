@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Tracker Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="light-mode">
+    <!-- ANIMATED BACKGROUND -->
+    <div class="background-container">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
+        <div class="clouds"></div>
+        <div class="moon"></div>
+        <div class="mountains"></div>
+    </div>
+
+    <!-- THEME TOGGLE -->
+    <div class="theme-toggle">
+        <button id="themeBtn" class="theme-btn">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- SPLASH SCREEN -->
+    <div id="splashScreen" class="screen active">
+        <div class="splash-content">
+            <div class="logo-animation">
+                <div class="logo-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+            </div>
+            <h1 class="app-title">Trip Tracker Pro</h1>
+            <p class="app-tagline">Journey Smarter, Travel Greener</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONBOARDING SCREENS -->
+    <div id="onboardingScreen" class="screen">
+        <div class="onboarding-container">
+            <div class="onboarding-slide active">
+                <div class="slide-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h2>Smart Journey Tracking</h2>
+                <p>Automatically track your trips with intelligent route mapping and real-time GPS</p>
+            </div>
+            <div class="onboarding-slide">
+                <div class="slide-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <h2>Eco Impact Analytics</h2>
+                <p>Monitor your carbon footprint with detailed environmental insights and sustainability goals</p>
+            </div>
+            <div class="onboarding-slide">
+                <div class="slide-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h2>Safety First</h2>
+                <p>Emergency SOS with live location sharing and automatic emergency contact alerts</p>
+            </div>
+            <div class="onboarding-controls">
+                <button class="btn-secondary" onclick="app.skipOnboarding()">Skip</button>
+                <button class="btn-primary" onclick="app.nextOnboardingSlide()">Next</button>
+            </div>
+            <div class="onboarding-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="screen">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-route"></i>
+                </div>
+                <h2>Welcome Back</h2>
+                <p>Sign in to continue your journey</p>
+            </div>
+            
+            <div class="login-form">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" placeholder="Enter your email" id="loginEmail" value="demo@triptracker.com">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Enter your password" id="loginPassword" value="password">
+                </div>
+                <button class="btn-primary login-btn" onclick="app.login()">
+                    <span class="btn-text">Sign In</span>
+                    <div class="btn-loader">
+                        <div class="spinner"></div>
+                    </div>
+                </button>
+            </div>
+
+            <div class="login-divider">
+                <span>or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <button class="social-btn google-btn" onclick="app.socialLogin('google')">
+                    <i class="fab fa-google"></i>
+                    <span>Google</span>
+                </button>
+                <button class="social-btn apple-btn" onclick="app.socialLogin('apple')">
+                    <i class="fab fa-apple"></i>
+                    <span>Apple</span>
+                </button>
+            </div>
+
+            <div class="login-footer">
+                <p>Don't have an account? <a href="#" onclick="app.showSignup()">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIGNUP SCREEN -->
+    <div id="signupScreen" class="screen">
+        <div class="signup-container">
+            <div class="signup-header">
+                <div class="signup-logo">
+                    <i class="fas fa-route"></i>
+                </div>
+                <h2>Create Account</h2>
+                <p>Join Trip Tracker Pro today</p>
+            </div>
+            
+            <div class="signup-form">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Full name" id="signupName">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" placeholder="Email address" id="signupEmail">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Create password" id="signupPassword">
+                </div>
+                <button class="btn-primary signup-btn" onclick="app.signup()">
+                    <span class="btn-text">Create Account</span>
+                    <div class="btn-loader">
+                        <div class="spinner"></div>
+                    </div>
+                </button>
+            </div>
+
+            <div class="signup-footer">
+                <p>Already have an account? <a href="#" onclick="app.showLogin()">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="mainApp" class="screen">
+        <!-- HOME SCREEN -->
+        <div id="homeScreen" class="app-screen active">
+            <div class="app-container">
+                <div class="app-header">
+                    <div class="header-left">
+                        <div class="user-greeting">
+                            <h2 id="greetingText">Good Morning, Traveler! 👋</h2>
+                            <p id="dateDisplay"></p>
+                        </div>
+                    </div>
+                    <div class="header-right">
+                        <div class="notification-bell" onclick="app.toggleNotifications()">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-dot" id="notificationDot"></span>
+                        </div>
+                        <div class="user-avatar" onclick="app.showProfile()">
+                            <img src="" alt="User" id="userAvatar" onerror="this.style.display='none'">
+                            <div class="avatar-placeholder" id="avatarPlaceholder">T</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon trips">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalTrips">0</h3>
+                            <p>Total Trips</p>
+                        </div>
+                        <div class="stat-trend up" id="tripsTrend">+12%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon distance">
+                            <i class="fas fa-road"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalDistance">0</h3>
+                            <p>KM Traveled</p>
+                        </div>
+                        <div class="stat-trend up" id="distanceTrend">+8%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon eco">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="ecoPoints">0</h3>
+                            <p>Eco Points</p>
+                        </div>
+                        <div class="stat-trend up" id="pointsTrend">+15%</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="section-header">
+                    <h3>Quick Actions</h3>
+                </div>
+                <div class="actions-grid">
+                    <div class="action-card" onclick="app.showAddTrip()">
+                        <div class="action-icon primary">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <p>New Trip</p>
+                    </div>
+                    <div class="action-card" onclick="app.showAnalytics()">
+                        <div class="action-icon secondary">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <p>Analytics</p>
+                    </div>
+                    <div class="action-card" onclick="app.showMapScreen()">
+                        <div class="action-icon info">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <p>Live Map</p>
+                    </div>
+                    <div class="action-card" onclick="app.showRewards()">
+                        <div class="action-icon success">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <p>Rewards</p>
+                    </div>
+                </div>
+
+                <!-- Recent Trips -->
+                <div class="section-header with-action">
+                    <h3>Recent Trips</h3>
+                    <a href="#" class="see-all" onclick="app.showHistory()">See All</a>
+                </div>
+                <div class="recent-trips" id="recentTripsList">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+
+                <!-- Eco Impact -->
+                <div class="eco-impact-card">
+                    <div class="impact-header">
+                        <i class="fas fa-globe-americas"></i>
+                        <h4>Your Eco Impact</h4>
+                    </div>
+                    <div class="impact-stats">
+                        <div class="impact-stat">
+                            <span class="impact-value" id="co2Saved">0</span>
+                            <span class="impact-label">kg CO₂ Saved</span>
+                        </div>
+                        <div class="impact-stat">
+                            <span class="impact-value" id="treesSaved">0</span>
+                            <span class="impact-label">Trees Equivalent</span>
+                        </div>
+                    </div>
+                    <div class="impact-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="ecoProgress"></div>
+                        </div>
+                        <span class="progress-text">Monthly Goal: <span id="progressPercent">0%</span></span>
+                    </div>
+                </div>
+
+                <!-- SOS Emergency Button -->
+                <div class="sos-section">
+                    <button class="sos-home-btn" onclick="app.showSOSScreen()">
+                        <div class="sos-icon">
+                            <i class="fas fa-first-aid"></i>
+                        </div>
+                        <span class="sos-text">EMERGENCY SOS</span>
+                        <span class="sos-subtext">Tap in case of emergency</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <nav class="bottom-nav">
+                <div class="nav-item active" onclick="app.showHome()">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <span class="nav-label">Home</span>
+                </div>
+                <div class="nav-item" onclick="app.showHistory()">
+                    <div class="nav-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <span class="nav-label">History</span>
+                </div>
+                <div class="nav-item" onclick="app.showMapScreen()">
+                    <div class="nav-icon">
+                        <i class="fas fa-map"></i>
+                    </div>
+                    <span class="nav-label">Map</span>
+                </div>
+                <div class="nav-item nav-center" onclick="app.showAddTrip()">
+                    <div class="nav-add-btn">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                </div>
+                <div class="nav-item" onclick="app.showAnalytics()">
+                    <div class="nav-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <span class="nav-label">Stats</span>
+                </div>
+                <div class="nav-item" onclick="app.showProfile()">
+                    <div class="nav-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="nav-label">Profile</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- ADD TRIP SCREEN -->
+        <div id="addTripScreen" class="app-screen">
+            <div class="app-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="app.showHome()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Log New Trip</h2>
+                    <div class="header-actions">
+                        <button class="icon-btn" onclick="app.useCurrentLocation()" title="Use Current Location">
+                            <i class="fas fa-location-arrow"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <form class="trip-form" id="tripForm" onsubmit="app.saveTrip(event)">
+                    <div class="form-section">
+                        <h4 class="section-title">Trip Information</h4>
+                        <div class="input-group">
+                            <label>Trip Title</label>
+                            <input type="text" placeholder="e.g., Office Commute, Weekend Trip" id="tripTitle" required oninput="app.updateTripPreview()">
+                        </div>
+                        
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Start Location</label>
+                                <input type="text" placeholder="From" id="startLocation" required oninput="app.updateTripPreview()">
+                            </div>
+                            <div class="input-group">
+                                <label>End Location</label>
+                                <input type="text" placeholder="To" id="endLocation" required oninput="app.updateTripPreview()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4 class="section-title">Transport Mode</h4>
+                        <div class="transport-grid">
+                            <div class="transport-option active" data-mode="walk" onclick="app.selectTransport('walk')">
+                                <div class="transport-icon">
+                                    <i class="fas fa-walking"></i>
+                                </div>
+                                <span>Walk</span>
+                            </div>
+                            <div class="transport-option" data-mode="cycle" onclick="app.selectTransport('cycle')">
+                                <div class="transport-icon">
+                                    <i class="fas fa-bicycle"></i>
+                                </div>
+                                <span>Cycle</span>
+                            </div>
+                            <div class="transport-option" data-mode="bus" onclick="app.selectTransport('bus')">
+                                <div class="transport-icon">
+                                    <i class="fas fa-bus"></i>
+                                </div>
+                                <span>Bus</span>
+                            </div>
+                            <div class="transport-option" data-mode="train" onclick="app.selectTransport('train')">
+                                <div class="transport-icon">
+                                    <i class="fas fa-train"></i>
+                                </div>
+                                <span>Train</span>
+                            </div>
+                            <div class="transport-option" data-mode="car" onclick="app.selectTransport('car')">
+                                <div class="transport-icon">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <span>Car</span>
+                            </div>
+                            <div class="transport-option" data-mode="flight" onclick="app.selectTransport('flight')">
+                                <div class="transport-icon">
+                                    <i class="fas fa-plane"></i>
+                                </div>
+                                <span>Flight</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4 class="section-title">Trip Details</h4>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Distance (KM)</label>
+                                <div class="input-with-action">
+                                    <input type="number" placeholder="0" id="tripDistance" min="0" step="0.1" required oninput="app.updateTripPreview()">
+                                    <button type="button" class="input-btn" onclick="app.calculateDistance()" title="Calculate Distance">
+                                        <i class="fas fa-calculator"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Duration (mins)</label>
+                                <input type="number" placeholder="0" id="tripDuration" min="0" oninput="app.updateTripPreview()">
+                            </div>
+                        </div>
+                        
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Date</label>
+                                <input type="date" id="tripDate" required onchange="app.updateTripPreview()">
+                            </div>
+                            <div class="input-group">
+                                <label>Time</label>
+                                <input type="time" id="tripTime" required onchange="app.updateTripPreview()">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Notes (Optional)</label>
+                            <textarea placeholder="Add any notes about your trip..." id="tripNotes" rows="3" oninput="app.updateTripPreview()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4 class="section-title">Trip Preview</h4>
+                        <div class="trip-preview" id="tripPreview">
+                            <div class="preview-placeholder">
+                                <i class="fas fa-route"></i>
+                                <p>Fill the form to see trip preview</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary submit-btn">
+                        <i class="fas fa-save"></i>
+                        Save Trip
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MAP TRACKING SCREEN -->
+        <div id="mapScreen" class="app-screen">
+            <div class="app-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="app.showHome()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Live Trip Tracking</h2>
+                    <div class="header-actions">
+                        <button class="icon-btn" onclick="app.startTracking()" id="startTrackingBtn" title="Start Tracking">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="icon-btn" onclick="app.stopTracking()" id="stopTrackingBtn" style="display: none;" title="Stop Tracking">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="map-container">
+                    <div id="liveMap" class="live-map">
+                        <div class="map-placeholder">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <p>Start tracking to see your live location</p>
+                        </div>
+                        <!-- Map visualization will be rendered here -->
+                        <div class="map-visualization" id="mapVisualization" style="display: none;">
+                            <div class="map-path"></div>
+                            <div class="current-location-marker">
+                                <i class="fas fa-location-dot"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="map-controls">
+                        <button class="map-btn" onclick="app.centerMap()" title="Center Map">
+                            <i class="fas fa-crosshairs"></i>
+                        </button>
+                        <button class="map-btn" onclick="app.toggleSatellite()" title="Toggle View">
+                            <i class="fas fa-satellite"></i>
+                        </button>
+                        <button class="map-btn sos-btn" onclick="app.triggerSOS()" title="Emergency SOS">
+                            <i class="fas fa-first-aid"></i>
+                            SOS
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tracking-info">
+                    <div class="tracking-stats">
+                        <div class="tracking-stat">
+                            <span class="stat-label">Distance</span>
+                            <span class="stat-value" id="liveDistance">0 km</span>
+                        </div>
+                        <div class="tracking-stat">
+                            <span class="stat-label">Duration</span>
+                            <span class="stat-value" id="liveDuration">00:00</span>
+                        </div>
+                        <div class="tracking-stat">
+                            <span class="stat-label">Speed</span>
+                            <span class="stat-value" id="liveSpeed">0 km/h</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tracking-route">
+                        <h4>Current Route</h4>
+                        <div class="route-info">
+                            <div class="route-point">
+                                <div class="point-marker start"></div>
+                                <span id="startPoint">Waiting for location...</span>
+                            </div>
+                            <div class="route-point">
+                                <div class="point-marker current"></div>
+                                <span id="currentPoint">Acquiring GPS...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTORY SCREEN -->
+        <div id="historyScreen" class="app-screen">
+            <div class="app-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="app.showHome()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Trip History</h2>
+                    <div class="header-actions">
+                        <button class="icon-btn" onclick="app.exportTrips()" title="Export Trips">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="icon-btn" onclick="app.clearAllTrips()" title="Clear All">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <select id="transportFilter" onchange="app.filterTrips()">
+                            <option value="all">All Transport</option>
+                            <option value="walk">Walking</option>
+                            <option value="cycle">Cycling</option>
+                            <option value="bus">Bus</option>
+                            <option value="train">Train</option>
+                            <option value="car">Car</option>
+                            <option value="flight">Flight</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select id="dateFilter" onchange="app.filterTrips()">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                    <button class="filter-btn" onclick="app.toggleSort()" title="Sort Order">
+                        <i class="fas fa-sort-amount-down" id="sortIcon"></i>
+                    </button>
+                </div>
+
+                <div class="history-stats">
+                    <div class="history-stat">
+                        <span class="stat-number" id="filteredTrips">0</span>
+                        <span class="stat-label">Trips</span>
+                    </div>
+                    <div class="history-stat">
+                        <span class="stat-number" id="filteredDistance">0</span>
+                        <span class="stat-label">KM</span>
+                    </div>
+                    <div class="history-stat">
+                        <span class="stat-number" id="filteredCO2">0</span>
+                        <span class="stat-label">kg CO₂</span>
+                    </div>
+                </div>
+
+                <div class="trips-list" id="tripsList">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS SCREEN -->
+        <div id="analyticsScreen" class="app-screen">
+            <div class="app-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="app.showHome()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Travel Analytics</h2>
+                    <div class="header-actions">
+                        <button class="icon-btn" onclick="app.refreshAnalytics()" title="Refresh">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analytics-tabs">
+                    <button class="tab-btn active" onclick="app.switchTab('overview')">Overview</button>
+                    <button class="tab-btn" onclick="app.switchTab('transport')">Transport</button>
+                    <button class="tab-btn" onclick="app.switchTab('environment')">Environment</button>
+                </div>
+
+                <div class="tab-content active" id="overviewTab">
+                    <div class="chart-container">
+                        <div class="chart-card">
+                            <h4>Weekly Activity</h4>
+                            <canvas id="weeklyChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h4>Monthly Summary</h4>
+                            <div class="summary-stats">
+                                <div class="summary-stat">
+                                    <i class="fas fa-route"></i>
+                                    <div>
+                                        <span class="value" id="monthlyTrips">0</span>
+                                        <span class="label">This Month</span>
+                                    </div>
+                                </div>
+                                <div class="summary-stat">
+                                    <i class="fas fa-road"></i>
+                                    <div>
+                                        <span class="value" id="monthlyDistance">0 km</span>
+                                        <span class="label">Distance</span>
+                                    </div>
+                                </div>
+                                <div class="summary-stat">
+                                    <i class="fas fa-leaf"></i>
+                                    <div>
+                                        <span class="value" id="monthlyCO2">0 kg</span>
+                                        <span class="label">CO₂ Saved</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="transportTab">
+                    <div class="chart-container">
+                        <div class="chart-card">
+                            <h4>Transport Distribution</h4>
+                            <canvas id="transportChart" width="400" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="environmentTab">
+                    <div class="chart-container">
+                        <div class="chart-card">
+                            <h4>CO₂ Emissions Trend</h4>
+                            <canvas id="co2Chart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h4>Environmental Impact</h4>
+                            <div class="impact-facts">
+                                <div class="impact-fact">
+                                    <i class="fas fa-tree"></i>
+                                    <span>You've saved <strong id="treesCount">0</strong> trees</span>
+                                </div>
+                                <div class="impact-fact">
+                                    <i class="fas fa-car"></i>
+                                    <span>Equivalent to <strong id="carsCount">0</strong> cars off road</span>
+                                </div>
+                                <div class="impact-fact">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>Saved <strong id="energyCount">0</strong> kWh energy</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE SCREEN -->
+        <div id="profileScreen" class="app-screen">
+            <div class="app-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="app.showHome()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>My Profile</h2>
+                    <div class="header-actions">
+                        <button class="icon-btn" onclick="app.editProfile()" title="Edit Profile">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="profile-header">
+                    <div class="avatar-section">
+                        <div class="avatar-large">
+                            <img src="" alt="User" id="profileAvatar" onerror="this.style.display='none'">
+                            <div class="avatar-placeholder-large" id="profileAvatarPlaceholder">T</div>
+                            <button class="avatar-edit" onclick="app.changeAvatar()">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="profileName">Traveler</h3>
+                            <p id="profileEmail">traveler@example.com</p>
+                            <div class="member-since">
+                                <i class="fas fa-calendar"></i>
+                                Member since <span id="memberSince">2024</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-stats-grid">
+                    <div class="profile-stat-card">
+                        <div class="stat-value" id="profileTotalTrips">0</div>
+                        <div class="stat-label">Total Trips</div>
+                    </div>
+                    <div class="profile-stat-card">
+                        <div class="stat-value" id="profileTotalDistance">0</div>
+                        <div class="stat-label">KM Traveled</div>
+                    </div>
+                    <div class="profile-stat-card">
+                        <div class="stat-value" id="profileTotalCO2">0</div>
+                        <div class="stat-label">CO₂ Saved</div>
+                    </div>
+                    <div class="profile-stat-card">
+                        <div class="stat-value" id="profileEcoPoints">0</div>
+                        <div class="stat-label">Eco Points</div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="section-header with-action">
+                        <h4>Badges & Achievements</h4>
+                        <a href="#" class="see-all" onclick="app.showAllBadges()">View All</a>
+                    </div>
+                    <div class="badges-grid" id="badgesGrid">
+                        <!-- Dynamic badges will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4>Settings</h4>
+                    <div class="settings-menu">
+                        <div class="menu-item" onclick="app.toggleNotifications()">
+                            <div class="menu-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="menu-content">
+                                <span>Notifications</span>
+                                <small>Manage your alerts</small>
+                            </div>
+                            <div class="toggle-switch">
+                                <label class="switch">
+                                    <input type="checkbox" id="notificationsSwitch" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="menu-item" onclick="app.toggleLocationTracking()">
+                            <div class="menu-icon">
+                                <i class="fas fa-location-arrow"></i>
+                            </div>
+                            <div class="menu-content">
+                                <span>Location Tracking</span>
+                                <small>Auto-detect trips</small>
+                            </div>
+                            <div class="toggle-switch">
+                                <label class="switch">
+                                    <input type="checkbox" id="locationSwitch">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="menu-item" onclick="app.toggleTheme()">
+                            <div class="menu-icon">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <div class="menu-content">
+                                <span>Dark Mode</span>
+                                <small>Theme preference</small>
+                            </div>
+                            <div class="toggle-switch">
+                                <label class="switch">
+                                    <input type="checkbox" id="themeSwitch">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="menu-item" onclick="app.showAbout()">
+                            <div class="menu-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="menu-content">
+                                <span>About</span>
+                                <small>App version and info</small>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="logout-section">
+                    <button class="btn-logout" onclick="app.logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOS EMERGENCY SCREEN -->
+    <div id="sosScreen" class="screen">
+        <div class="sos-container">
+            <div class="sos-header">
+                <div class="sos-icon">
+                    <i class="fas fa-first-aid"></i>
+                </div>
+                <h1>EMERGENCY SOS</h1>
+                <p>Help is on the way</p>
+            </div>
+
+            <div class="sos-content">
+                <div class="sos-info">
+                    <div class="info-item">
+                        <i class="fas fa-location-arrow"></i>
+                        <div>
+                            <span class="label">Your Location</span>
+                            <span class="value" id="sosLocation">Getting location...</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <span class="label">SOS Activated</span>
+                            <span class="value" id="sosTime">Just now</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <span class="label">Emergency Contacts</span>
+                            <span class="value">Notified (2 people)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sos-actions">
+                    <button class="sos-action-btn call-btn" onclick="app.callEmergency()">
+                        <i class="fas fa-phone"></i>
+                        Call Emergency
+                    </button>
+                    <button class="sos-action-btn share-btn" onclick="app.shareLocation()">
+                        <i class="fas fa-share-alt"></i>
+                        Share Location
+                    </button>
+                    <button class="sos-action-btn cancel-btn" onclick="app.cancelSOS()">
+                        <i class="fas fa-times"></i>
+                        Cancel SOS
+                    </button>
+                </div>
+
+                <div class="sos-timer">
+                    <div class="timer-circle">
+                        <span id="sosTimer">30</span>
+                    </div>
+                    <p>Emergency services notified in</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
